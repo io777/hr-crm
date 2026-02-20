@@ -1,0 +1,31 @@
+@model Position
+@{
+    ViewData["Title"] = "Новая должность";
+}
+
+<h4 class="mb-3">Новая должность</h4>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BaseSalary" class="form-label"></label>
+                <div class="input-group">
+                    <input asp-for="BaseSalary" class="form-control" type="number" step="1000" />
+                    <span class="input-group-text">₽</span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/Positions" class="btn btn-outline-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

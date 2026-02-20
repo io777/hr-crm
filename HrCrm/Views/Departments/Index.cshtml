@@ -1,0 +1,46 @@
+@model List<Department>
+@{
+    ViewData["Title"] = "Отделы";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Отделы</h4>
+    <a href="/Departments/Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Добавить
+    </a>
+</div>
+
+<div class="row g-3">
+    @foreach (var d in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@d.Name</h5>
+                    @if (!string.IsNullOrEmpty(d.Description))
+                    {
+                        <p class="text-muted small">@d.Description</p>
+                    }
+                    <span class="badge bg-primary">@d.Employees.Count сотр.</span>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <form method="post" asp-action="Delete" asp-route-id="@d.Id"
+                          onsubmit="return confirm('Удалить отдел?')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox fs-1"></i>
+        <p>Отделы не найдены</p>
+    </div>
+}

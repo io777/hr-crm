@@ -1,0 +1,87 @@
+@model List<Employee>
+@{
+    ViewData["Title"] = "Сотрудники";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Сотрудники</h4>
+    <a href="/Employees/Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Добавить
+    </a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="search" class="form-control" placeholder="Поиск по ФИО или email..."
+               value="@ViewBag.Search" />
+    </div>
+    <div class="col-md-3">
+        <select name="departmentId" class="form-select" asp-items="@((SelectList)ViewBag.Departments)">
+            <option value="">Все отделы</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Фильтр</button>
+        <a href="/Employees" class="btn btn-outline-secondary">Сброс</a>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover bg-white">
+        <thead class="table-light">
+            <tr>
+                <th>ФИО</th>
+                <th>Отдел</th>
+                <th>Должность</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Дата приёма</th>
+                <th>Статус</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                <tr>
+                    <td>@e.FullName</td>
+                    <td>@(e.Department?.Name ?? "—")</td>
+                    <td>@(e.Position?.Title ?? "—")</td>
+                    <td>@(e.Phone ?? "—")</td>
+                    <td>@(e.Email ?? "—")</td>
+                    <td>@e.HireDate.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        @if (e.IsActive)
+                        {
+                            <span class="badge bg-success">Работает</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Уволен</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="/Employees/Edit/@e.Id" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="post" asp-action="Delete" asp-route-id="@e.Id"
+                              class="d-inline" onsubmit="return confirm('Удалить сотрудника?')">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox fs-1"></i>
+        <p>Сотрудники не найдены</p>
+    </div>
+}
